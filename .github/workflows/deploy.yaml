@@ -22,10 +22,11 @@ jobs:
       run: scp -r -o StrictHostKeyChecking=no ./ ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend
 
     - name: Run SSH commands
-      run: ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com << 'EOF'
-        cd /var/www/html/psy-local
-        composer install
-        php artisan migrate --force
-        php artisan cache:clear
-        php artisan config:cache
-      EOF
+      run: |
+        ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com << 'EOF'
+          cd /var/www/html/psy-backend
+          composer install
+          php artisan migrate --force
+          php artisan cache:clear
+          php artisan config:cache
+        EOF
