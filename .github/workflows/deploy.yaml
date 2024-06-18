@@ -20,7 +20,7 @@ jobs:
 
       - name: Copy files via SCP
         run: |
-          scp -r -o StrictHostKeyChecking=no ./ ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend/
+          scp -r -o StrictHostKeyChecking=no * ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend/
 
       - name: Run SSH commands
         run: |
