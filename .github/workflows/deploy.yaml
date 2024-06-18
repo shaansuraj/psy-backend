@@ -10,23 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.AWS_SSH_KEY }}
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.AWS_SSH_KEY }}
 
-    - name: Copy files via SCP
-      run: scp -r -o StrictHostKeyChecking=no ./ ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend
+      - name: Copy files via SCP
+        run: |
+          scp -r -o StrictHostKeyChecking=no ./ ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend/
 
-    - name: Run SSH commands
-      run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com << 'EOF'
-          cd /var/www/html/psy-backend
-          composer install
-          php artisan migrate --force
-          php artisan cache:clear
-          php artisan config:cache
-        EOF
+      - name: Run SSH commands
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com << 'EOF'
+            cd /var/www/html/psy-backend
+            composer install
+            php artisan migrate --force
+            php artisan cache:clear
+            php artisan config:cache
+          EOF
