@@ -20,14 +20,19 @@ jobs:
 
       - name: Copy files via SCP
         run: |
-          scp -r -o StrictHostKeyChecking=no * ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend/
+          scp -r -o StrictHostKeyChecking=no * ec2-user@ec2-65-0-107-175.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend/
 
-      - name: Run SSH commands
+     - name: Run SSH commands
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-109-202-98.ap-south-1.compute.amazonaws.com << 'EOF'
+          ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-public-dns << 'EOF'
             cd /var/www/html/psy-backend
-            composer install
+            composer install --no-dev --optimize-autoloader
             php artisan migrate --force
             php artisan cache:clear
             php artisan config:cache
+            sudo chown -R apache:apache /var/www/html/psy-backend
+            sudo chmod -R 755 /var/www/html/psy-backend
+            sudo chmod -R 777 /var/www/html/psy-backend/storage
+            sudo chmod -R 777 /var/www/html/psy-backend/bootstrap/cache
+            sudo systemctl restart httpd
           EOF
