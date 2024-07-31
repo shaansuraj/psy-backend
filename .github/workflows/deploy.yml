@@ -22,9 +22,10 @@ jobs:
         run: |
           scp -r -o StrictHostKeyChecking=no * ec2-user@ec2-65-0-107-175.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend/
 
-     - name: Run SSH commands
+      - name: Run SSH commands
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-public-dns << 'EOF'
+          ssh -o StrictHostKeyChecking=no ec2-user@ec2-65-0-107-175.ap-south-1.compute.amazonaws.com << 'EOF'
+            sudo yum install -y php-cli php-zip wget unzip git
             cd /var/www/html/psy-backend
             composer install --no-dev --optimize-autoloader
             php artisan migrate --force
