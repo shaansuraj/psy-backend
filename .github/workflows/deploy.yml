@@ -18,14 +18,20 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.AWS_SSH_KEY }}
 
+      - name: Fix permissions on remote server
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@ec2-65-0-107-175.ap-south-1.compute.amazonaws.com << 'EOF'
+            sudo chown -R ec2-user:ec2-user /var/www/html/psy-backend/
+            sudo chmod -R 755 /var/www/html/psy-backend/
+          EOF
+
       - name: Copy files via SCP
         run: |
           scp -r -o StrictHostKeyChecking=no * ec2-user@ec2-65-0-107-175.ap-south-1.compute.amazonaws.com:/var/www/html/psy-backend/
 
       - name: Run SSH commands
         run: |
-          ssh -o StrictHostKeyChecking=no * ec2-user@ec2-65-0-107-175.ap-south-1.compute.amazonaws.com << 'EOF'
-            sudo yum install -y php-cli php-zip wget unzip git
+          ssh -o StrictHostKeyChecking=no ec2-user@ec2-65-0-107-175.ap-south-1.compute.amazonaws.com << 'EOF'
             cd /var/www/html/psy-backend
             composer install --no-dev --optimize-autoloader
             php artisan migrate --force
